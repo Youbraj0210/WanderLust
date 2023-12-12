@@ -1,0 +1,47 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+    <div class="row">
+        <div class="col-8 offset-2">
+            <br>
+            <h3>Edit this Listing</h3>
+            <form action="/listings/<%= listing._id %>?_method=PUT" method="post">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input class="form-control" type="text" name="Listing[title]" placeholder="Enter the title"
+                        value="<%= listing.title %>">
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" name="Listing[description]" id="" cols="30" rows="10"
+                        placeholder="Enter description"><%= listing.description %></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="image" class="form-label">Image-link</label>
+                    <input class="form-control" type="text" name="Listing[image]" placeholder="Enter the image url"
+                        value="<%= listing.image %>">
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label for="price" class="form-label"></label>
+                        <input class="form-control" type="text" name="Listing[price]" placeholder="Enter the price"
+                            value="<%= listing.price %>">
+                    </div>
+                    <div class="mb-3 col-md-8">
+                        <label for="country" class="form-label"></label>
+                        <input class="form-control" type="text" name="Listing[country]" placeholder="Enter the country"
+                            value="<%= listing.country %>">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label"></label>
+                    <input class="form-control" type="text" name="Listing[location]" placeholder="Enter the location"
+                        value="<%= listing.location %>">
+                </div>
+
+                <button class="btn btn-dark add-btn">EDIT</button>
+                <br><br>
+            </form>
+        </div>
+    </div>
