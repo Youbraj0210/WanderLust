@@ -2,12 +2,13 @@ const express = require("express");
 const app = express();
 const wrapAsync = require("./utils/wrapasync.js");
 const expressError = require("./utils/expressError.js");
+const listingSchema = require("./Schema.js");
 
 const mongoose = require("mongoose");
 const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
-; const ejsMate = require("ejs-mate")
+const ejsMate = require("ejs-mate");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -29,6 +30,19 @@ main()
 async function main() {
     await mongoose.connect(MONGO_URL);
 }
+
+const validateListing = (req,res,next)=>{
+    let result = listingSchema.validate(req.body);
+    console.log(result);
+    if(result.error){
+        let errMsg = result.error.details.map(el=>el.message).join(",");
+        throw new expressError(400,errMsg);
+    }
+    else{
+        next()
+    }
+}
+
 
 app.get("/", (req, res) => {
     res.send("this is the root");
@@ -54,11 +68,9 @@ app.get("/listings/:id",wrapAsync( async (req, res) => {
 }));
 
 //create route
-app.post("/listings", wrapAsync(async (req, res, next) => {
-    if(!req.body.listing){
-        throw new expressError(400,"Send valid data for the listing");
-    }
-    let newListing = new Listing(req.body.Listing);
+app.post("/listings",validateListing, wrapAsync(async (req, res, next) => {
+
+    let newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect("/listings");
 }));
@@ -71,10 +83,7 @@ app.get("/listings/:id/edit",wrapAsync( async (req, res) => {
 }));
 
 //update route
-app.put("/listings/:id",wrapAsync( async (req, res) => {
-    if(!req.body.listing){
-        throw new expressError(400,"Send valid data for the listing");
-    }
+app.put("/listings/:id",validateListing,wrapAsync( async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.Listing });
     res.redirect(`/listings/${id}`);
