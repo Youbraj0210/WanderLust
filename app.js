@@ -3,6 +3,7 @@ const app = express();
 const wrapAsync = require("./utils/wrapasync.js");
 const expressError = require("./utils/expressError.js");
 const listingSchema = require("./Schema.js");
+const reviewSchema = require("./Schema.js");
 
 const mongoose = require("mongoose");
 const Listing = require("./models/listing.js");
@@ -41,6 +42,18 @@ const validateListing = (req,res,next)=>{
     }
     else{
         next()
+    }
+}
+
+const validateReview = (req,res,next)=>{
+    let result = reviewSchema.validate(req.body);
+    console.log(result);
+    if(result.error){
+        let errMsg = result.error.details.map(el=>el.message).join(",");
+        throw new expressError(400,errMsg);
+    }
+    else{
+        next();
     }
 }
 
@@ -99,7 +112,7 @@ app.delete("/listings/:id",wrapAsync( async (req, res) => {
 }));
 
 //review route
-app.post("/listings/:id/review", async (req,res)=>{
+app.post("/listings/:id/review",validateReview, wrapAsync(async (req,res)=>{
     let {id} = req.params;
     // console.log(id);
     let listing = await Listing.findById(id);
@@ -110,7 +123,7 @@ app.post("/listings/:id/review", async (req,res)=>{
     await listing.save()
     console.log("new review saved");
     res.redirect(`/listings/${id}`);
-})
+}));
 
 app.all("*",(req,res,next)=>{
     next(new expressError(404,"Page Not Found!"));
