@@ -6,6 +6,7 @@ const listingSchema = require("./Schema.js");
 
 const mongoose = require("mongoose");
 const Listing = require("./models/listing.js");
+const Review = require("./models/review.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
@@ -96,6 +97,22 @@ app.delete("/listings/:id",wrapAsync( async (req, res) => {
     // console.log(deletedListing);
     res.redirect("/listings");
 }));
+
+//review route
+app.post("/listings/:id/review", async (req,res)=>{
+    let {id} = req.params;
+    // console.log(id);
+    let listing = await Listing.findById(id);
+    let newReview = new Review(req.body.review);
+    console.log(newReview);
+    listing.reviews.push(newReview);
+    await newReview.save()
+    await listing.save()
+    console.log("new review saved");
+    res.redirect(`/listings/${id}`);
+
+
+})
 
 app.all("*",(req,res,next)=>{
     next(new expressError(404,"Page Not Found!"));
