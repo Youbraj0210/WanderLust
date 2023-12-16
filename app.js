@@ -110,8 +110,6 @@ app.post("/listings/:id/review", async (req,res)=>{
     await listing.save()
     console.log("new review saved");
     res.redirect(`/listings/${id}`);
-
-
 })
 
 app.all("*",(req,res,next)=>{

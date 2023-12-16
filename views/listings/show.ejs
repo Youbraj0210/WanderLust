@@ -17,7 +17,6 @@
             <br><br>
             <div class="btns">
                 <a class="btn btn-dark add-btn col-2" href="/listings/<%= listing._id %>/edit">EDIT</a>
-    
 
                 <form action="/listings/<%= listing._id %>?_method=DELETE" method="post">
                     <button class="btn btn-dark offset-3">Delete </button>
@@ -28,17 +27,20 @@
         <div class="col-8 offset-3">
             <hr>
             <h4>Leave a review</h4>
-            <form action="/listings/<%= listing._id %>/review" method="post">
+            <form action="/listings/<%= listing._id %>/review" method="post" novalidate class="needs-validation">
                 <div class="mb-3">
                     <label class="form-label" for="rating">Rating</label>
                     <input class="form-range" type="range" min="1" max="5" id="rating" name="review[rating]">
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="comment">Comment</label>
-                    <textarea class="form-control" name="review[comment]" id="comment" cols="30" rows="10"></textarea>
+                    <textarea class="form-control" name="review[comment]" id="comment" cols="30" rows="10" required></textarea>
+                    <div class="valid-feedback">Looks good</div>
+                    <div class="invalid-feedback">Please enter a valid comment</div>
                 </div>
                 <button class="btn btn-outline-dark ">sumit</button>
             </form>
+            <br>
         </div>
         
     </div>
