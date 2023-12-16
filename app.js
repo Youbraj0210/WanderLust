@@ -85,7 +85,7 @@ app.get("/listings/:id/edit",wrapAsync( async (req, res) => {
 //update route
 app.put("/listings/:id",validateListing,wrapAsync( async (req, res) => {
     let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.Listing });
+    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     res.redirect(`/listings/${id}`);
 }));
 
@@ -93,7 +93,7 @@ app.put("/listings/:id",validateListing,wrapAsync( async (req, res) => {
 app.delete("/listings/:id",wrapAsync( async (req, res) => {
     let { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
-    console.log(deletedListing);
+    // console.log(deletedListing);
     res.redirect("/listings");
 }));
 
