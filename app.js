@@ -9,6 +9,7 @@ const ejsMate = require("ejs-mate");
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
 const session = require("express-session");
+const flash = require("connect-flash");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -32,28 +33,40 @@ async function main() {
 }
 
 const sessionOptions = {
-    secret:"supersecretcode",
-    resave:false,
-    saveUninitialized:true
+    secret: "supersecretcode",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly :true
+    }
 };
-
-app.use(session(sessionOptions));
 
 app.get("/", (req, res) => {
     res.send("this is the root");
 });
 
-app.use("/listings",listings);
-app.use("/listings/:id/review",reviews);
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req,res,next)=>{
+   res.locals.successMsg = req.flash("success");
+   res.locals.errorMsg = req.flash("error");
+   next();
+})
+
+app.use("/listings", listings);
+app.use("/listings/:id/review", reviews);
 
 
-app.all("*",(req,res,next)=>{
-    next(new expressError(404,"Page Not Found!"));
+app.all("*", (req, res, next) => {
+    next(new expressError(404, "Page Not Found!"));
 });
 
 app.use((err, req, res, next) => {
-    let{status=500,message="something went wrong"} = err;
-    res.status(status).render("error.ejs",{message});
+    let { status = 500, message = "something went wrong" } = err;
+    res.status(status).render("error.ejs", { message });
 });
 
 app.listen(8080, () => {
