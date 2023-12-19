@@ -1,8 +1,6 @@
 const express = require("express");
 const app = express();
 
-
-
 const mongoose = require("mongoose");
 
 const path = require("path");
@@ -10,6 +8,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
+const session = require("express-session");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -32,10 +31,13 @@ async function main() {
     await mongoose.connect(MONGO_URL);
 }
 
+const sessionOptions = {
+    secret:"supersecretcode",
+    resave:false,
+    saveUninitialized:true
+};
 
-
-
-
+app.use(session(sessionOptions));
 
 app.get("/", (req, res) => {
     res.send("this is the root");
@@ -45,7 +47,6 @@ app.use("/listings",listings);
 app.use("/listings/:id/review",reviews);
 
 
-
 app.all("*",(req,res,next)=>{
     next(new expressError(404,"Page Not Found!"));
 });
@@ -53,8 +54,7 @@ app.all("*",(req,res,next)=>{
 app.use((err, req, res, next) => {
     let{status=500,message="something went wrong"} = err;
     res.status(status).render("error.ejs",{message});
-})
-
+});
 
 app.listen(8080, () => {
     console.log("server is listening to port 8080");

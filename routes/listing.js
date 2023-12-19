@@ -8,11 +8,8 @@ const Listing = require("../models/listing.js");
 
 
 const validateListing = (req,res,next)=>{
-    console.log("entered the validation phase");
     let result = listingSchema.validate(req.body);
-    console.log("print the result");
     console.log(result);
-    // console.log(result.error.details[0]);
     if(result.error){
         let errMsg = result.error.details.map(el=>el.message).join(",");
         throw new expressError(400,errMsg);
