@@ -6,8 +6,9 @@ const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/review.js");
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
@@ -60,14 +61,27 @@ passport.use(new LocalStratergy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+
 app.use((req,res,next)=>{
    res.locals.successMsg = req.flash("success");
    res.locals.errorMsg = req.flash("error");
    next();
 })
 
-app.use("/listings", listings);
-app.use("/listings/:id/review", reviews);
+app.get("/demouser", async (req,res)=>{
+    let fakeuser = new User({
+        email: "fakeuser@getMaxListeners.com",
+        username: "fake-user"
+    });
+
+    let registeredUser = await User.register(fakeuser,"password");
+    res.send(registeredUser);
+});
+
+app.use("/listings", listingRouter);
+app.use("/listings/:id/review", reviewRouter);
+app.use("/",userRouter);
+
 
 
 app.all("*", (req, res, next) => {
