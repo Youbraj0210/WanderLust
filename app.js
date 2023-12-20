@@ -14,6 +14,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStratergy = require("passport-local");
 const User = require("./models/user.js");
+const expressError = require("./utils/expressError.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
