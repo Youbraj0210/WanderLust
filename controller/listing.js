@@ -10,7 +10,7 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.renderNewForm = (req, res) => {
-    console.log(req.user);
+    // console.log(req.user);
     res.render("listings/new.ejs")
 };
 
@@ -21,7 +21,7 @@ module.exports.showListings = async (req, res) => {
         req.flash("error", "listing you requested does not exist");
         res.redirect("/listings")
     }
-    console.log(listing);
+    // console.log(listing);
     res.render("listings/show.ejs", { listing })
 };
 

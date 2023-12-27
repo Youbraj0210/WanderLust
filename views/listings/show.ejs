@@ -4,6 +4,25 @@
     let listing = <%- JSON.stringify(listing)%>;
 
 </script>
+<style>
+    @media (max-width:987px) {
+        .show-image{
+            width: 50vw;
+        }
+        #map{
+            height: 50vw;
+        }
+        .add-btn{
+            width: 4rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .review{
+            width: 80%;
+        }
+    }
+</style>
     <div class="row mt-3">
         <div class="col-8 offset-3 ">
             <h3>
@@ -81,7 +100,7 @@
                         <div class="row">
                             <h4>All Reviews</h4>
                             <% for(let review of listing.reviews){ %>
-                                <div class="card col-5 ms-3 mb-3">
+                                <div class="card col-5 ms-3 mb-3 review">
                                     <div class="card-body">
                                         <h5 class="card-title">
                                             <%= review.author.username %>
